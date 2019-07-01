@@ -71,3 +71,16 @@ networks-configuration:
       - "zone-1"
       - "zone-2"
       - "zone-3"
+vmextensions-configuration:
+- name: web-lb-security-group
+  cloud_properties:
+    security_group: ((web_security_group))
+    load_balancer: ((web_lb))
+- name: ssh-lb-security-group
+  cloud_properties:
+    security_group: ((web_security_group))
+    load_balancer: ((ssh_lb))
+- name: tcp-lb-security-group
+  cloud_properties:
+    security_group: ((web_security_group))
+    load_balancer: ((tcp_lb))

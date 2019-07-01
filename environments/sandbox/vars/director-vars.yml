@@ -1,6 +1,11 @@
 resource_group_name: sandbox
 bosh_security_group_name: sandbox-bosh-deployed-vms-security-group
 virtual_network_name: sandbox-virtual-network
+web_security_group: sandbox-bosh-deployed-vms-security-group
+web_lb: sandbox-web-lb
+ssh_lb: sandbox-diego-ssh-lb
+tcp_lb: sandbox-tcp-lb
+
 dns_servers: 168.63.129.16
 
 infra_subnet_name: sandbox-infrastructure-subnet
