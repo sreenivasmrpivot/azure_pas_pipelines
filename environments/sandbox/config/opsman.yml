@@ -1,7 +1,7 @@
 ---
 opsman-configuration:
   azure:
-    subscription_id: (azure_subscription_id))
+    subscription_id: ((azure_subscription_id))
     resource_group: ((azure-resource-group))
     tenant_id: ((azure_tenant_id))
     client_id: ((azure_client_id))
