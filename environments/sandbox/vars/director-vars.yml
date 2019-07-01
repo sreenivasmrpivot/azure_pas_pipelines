@@ -1,0 +1,19 @@
+resource_group_name: sandbox
+bosh_security_group_name: sandbox-bosh-deployed-vms-security-group
+virtual_network_name: sandbox-virtual-network
+dns_servers: 168.63.129.16
+
+infra_subnet_name: sandbox-infrastructure-subnet
+infra_internal_cidr: 10.0.8.0/26
+infra_reserved_ip_ranges: 10.0.8.1-10.0.8.9
+infra_internal_gw: 10.0.8.1
+
+pas_subnet_name: sandbox-pas-subnet
+pas_internal_cidr: 10.0.0.0/22
+pas_reserved_ip_ranges: 10.0.0.1-10.0.0.9
+pas_internal_gw: 10.0.0.1
+
+services_subnet_name: sandbox-services-subnet
+services_internal_cidr: 10.0.0.0/22
+services_reserved_ip_ranges: 10.0.0.1-10.0.0.9
+services_internal_gw: 10.0.0.1

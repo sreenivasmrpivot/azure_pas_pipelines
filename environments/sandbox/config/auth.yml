@@ -1,0 +1,4 @@
+---
+username: ((opsman.username))
+password: ((opsman.password))
+decryption-passphrase: ((opsman_decryption_passphrase))

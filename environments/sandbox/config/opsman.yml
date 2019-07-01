@@ -1,0 +1,21 @@
+---
+opsman-configuration:
+  azure:
+    subscription_id: (azure_subscription_id))
+    resource_group: ((azure-resource-group))
+    tenant_id: (azure_tenant_id))
+    client_id: (azure_client_id))
+    client_secret: (azure_client_secret))
+    location: westus
+    container: opsmanagerimage              
+    network_security_group: sandbox-ops-manager-security-group
+    vpc_subnet: /subscriptions/(azure_subscription_id))/resourceGroups/((azure-resource-group))/providers/Microsoft.Network/virtualNetworks/((virtual-network-name))/subnets/((subnet-name))
+    storage_account: ((opsman-storage-account))                 
+    # storage_key: 
+    ssh_public_key: ((opsman_ssh.public_key))
+    vm_name: ops-manager-vm                       # default: Ops Manager-vm
+    boot_disk_size: 200                           # default: 200
+    cloud_name: AzureCloud                        # default: AzureCloud
+    use_unmanaged_disk: false
+    public_ip: ((opsman_public_ip))
+    private_ip: ((opsman_private_ip))

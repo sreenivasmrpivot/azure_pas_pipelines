@@ -1,0 +1,73 @@
+---
+properties-configuration:
+  director_configuration:
+    ntp_servers_string: 0.pool.ntp.org,1.pool.ntp.org
+    resurrector_enabled: true
+    retry_bosh_deploys: true
+    blobstore_type: local
+  iaas_configuration:
+    bosh_storage_account_name: ((bosh_root_storage_account))
+    client_id: ((azure_client_id))
+    client_secret: ((azure_client_secret))
+    storage_account_type: Premium_LRS
+    cloud_storage_type: managed_disks
+    default_security_group: ((bosh_security_group_name))
+    environment: AzureCloud
+    resource_group_name: ((resource_group_name))
+    ssh_public_key: ((opsman_ssh.public_key))
+    ssh_private_key: ((opsman_ssh.private_key))
+    subscription_id: ((azure_subscription_id))
+    tenant_id: ((azure_tenant_id))
+resource-configuration:
+  compilation:
+    instances: automatic
+    instance_type:
+      id: Standard_DS3_v2
+    internet_connected: false
+  director:
+    instances: automatic
+    persistent_disk:
+      size_mb: "307200"
+    instance_type:
+      id: automatic
+    internet_connected: false
+network-assignment:
+  network:
+    name: infrastructure 
+  singleton_availability_zone:
+    name: zone-1
+networks-configuration:
+  networks:
+  - name: infrastructure
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((infra_subnet_name))
+      cidr: ((infra_internal_cidr))
+      reserved_ip_ranges: ((infra_reserved_ip_ranges))
+      gateway: ((infra_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
+  - name: services
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((services_subnet_name))
+      cidr: ((services_internal_cidr))
+      reserved_ip_ranges: ((services_reserved_ip_ranges))
+      gateway: ((services_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
+  - name: pas
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((pas_subnet_name))
+      cidr: ((pas_internal_cidr))
+      reserved_ip_ranges: ((pas_reserved_ip_ranges))
+      gateway: ((pas_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
