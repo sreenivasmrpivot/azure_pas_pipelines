@@ -14,6 +14,6 @@ pas_reserved_ip_ranges: 10.0.0.1-10.0.0.9
 pas_internal_gw: 10.0.0.1
 
 services_subnet_name: sandbox-services-subnet
-services_internal_cidr: 10.0.0.0/22
-services_reserved_ip_ranges: 10.0.0.1-10.0.0.9
-services_internal_gw: 10.0.0.1
+services_internal_cidr: 10.0.4.0/22
+services_reserved_ip_ranges: 10.0.4.1-10.0.4.9
+services_internal_gw: 10.0.4.1
