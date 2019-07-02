@@ -1,4 +1,4 @@
-org: ""
+org: miclip
 spaces:
 - dev
-enable-delete-spaces: false
+enable-delete-spaces: true
