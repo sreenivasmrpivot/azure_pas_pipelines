@@ -22,3 +22,13 @@ services_subnet_name: sandbox-services-subnet
 services_internal_cidr: 10.0.4.0/22
 services_reserved_ip_ranges: 10.0.4.1-10.0.4.9
 services_internal_gw: 10.0.4.1
+
+pks_subnet_name: sandbox-pks-subnet
+pks_internal_cidr: 10.0.16.0/22
+pks_reserved_ip_ranges: 10.0.16.1-10.0.16.9
+pks_internal_gw: 10.0.16.1
+
+pks_services_subnet_name: sandbox-pks-services-subnet
+pks_services_internal_cidr: 10.0.20.0/22
+pks_services_reserved_ip_ranges: 10.0.20.1-10.0.20.9
+pks_services_internal_gw: 10.0.20.1

@@ -71,6 +71,28 @@ networks-configuration:
       - "zone-1"
       - "zone-2"
       - "zone-3"
+  - name: pks
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((pks_subnet_name))
+      cidr: ((pks_internal_cidr))
+      reserved_ip_ranges: ((pks_reserved_ip_ranges))
+      gateway: ((pks_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
+  - name: pks-services
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((pks_services_subnet_name))
+      cidr: ((pks_services_internal_cidr))
+      reserved_ip_ranges: ((pks_services_reserved_ip_ranges))
+      gateway: ((pks_services_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
 vmextensions-configuration:
 - name: web-lb-security-group
   cloud_properties:
