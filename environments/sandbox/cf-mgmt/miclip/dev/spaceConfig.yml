@@ -7,8 +7,7 @@ space-developer:
   ldap_groups: []
 space-manager:
   ldap_users: []
-  users:
-  - mgmt_user
+  users: []
   saml_users: []
   ldap_groups: []
 space-auditor:
