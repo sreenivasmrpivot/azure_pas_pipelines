@@ -14,6 +14,8 @@ resources:
     uri: ((configuration-uri))
     branch: master
     submodules: all
+    paths: 
+      - terraforming-azure/**/*
     depth: 1
 
 
