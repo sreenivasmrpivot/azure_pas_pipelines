@@ -3,3 +3,5 @@ system_domain: sys.sandbox.miclip.io
 log_level: INFO
 time-trigger: 15m
 config_dir: ./environments/sandbox/cf-mgmt
+ldap_password: ""
+ldap_server: ""
