@@ -347,6 +347,8 @@ jobs:
               unpack: true
           - get: pas-stemcell
             trigger: true
+          - get: pks-stemcell
+            trigger: true
           - get: configuration
           - get: variable
       - task: interpolate-creds
