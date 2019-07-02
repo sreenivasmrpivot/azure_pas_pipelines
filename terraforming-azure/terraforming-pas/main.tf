@@ -46,6 +46,7 @@ module "pas" {
   source = "../modules/pas"
 
   env_name = "${var.env_name}"
+  env_id   = "${var.env_name}"
   location = "${var.location}"
 
   pas_subnet_cidr      = "${var.pcf_pas_subnet}"
