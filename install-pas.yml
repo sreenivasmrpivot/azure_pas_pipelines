@@ -283,7 +283,6 @@ jobs:
           - get: platform-automation-image
             params:
               unpack: true
-            trigger: true
           - get: platform-automation-tasks
             params:
               unpack: true
@@ -291,6 +290,7 @@ jobs:
           - get: installation
             passed: [ export-installation ]
           - get: configuration
+            trigger: true
           - get: variable
           - get: state
       - task: interpolate-creds
@@ -327,7 +327,6 @@ jobs:
               unpack: true
             passed:
               - upgrade-opsman
-            trigger: true
           - get: platform-automation-tasks
             params:
               unpack: true
@@ -353,13 +352,13 @@ jobs:
           - get: platform-automation-image
             params:
               unpack: true
-            trigger: true
             passed: [ "upgrade-opsman" ]
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: pas-product
           - get: configuration
+            trigger: true
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -381,11 +380,11 @@ jobs:
               unpack: true
             passed:
               - upload-and-stage-pas
-            trigger: true
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: configuration
+            trigger: true
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -410,11 +409,11 @@ jobs:
               unpack: true
             passed:
               - configure-pas
-            trigger: true
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: configuration
+            trigger: true
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
