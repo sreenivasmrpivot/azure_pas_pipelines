@@ -102,6 +102,24 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     regexp: pas-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
 
+- name: pks-product
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: \[pivotal-container-service,(.*)\]pivotal-container-service-.*.pivotal
+
+- name: pks-stemcell
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: pks-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
+
 # - name: pas-windows-product
 #   type: s3
 #   source:
@@ -341,6 +359,14 @@ jobs:
           stemcell: pas-stemcell
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
+      - task: upload-pks-stemcell
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-stemcell.yml
+        input_mapping:
+          env: interpolated-creds
+          stemcell: pks-stemcell
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
 
   - name: upload-and-stage-pas
     serial: true
@@ -364,6 +390,32 @@ jobs:
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
         input_mapping:
           product: pas-product
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+
+  - name: upload-and-stage-pks
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true            
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: pks-product
+          - get: configuration
+            trigger: true
+            passed: [ "upgrade-opsman" ]
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: upload-and-stage-product
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+        input_mapping:
+          product: pks-product
           env: interpolated-creds
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
@@ -396,6 +448,35 @@ jobs:
           CONFIG_FILE: environments/((foundation))/config/pas.yml
           ENV_FILE: environments/((foundation))/env/env.yml
           VARS_FILES: vars/environments/((foundation))/vars/pas-vars.yml
+  
+  - name: configure-pks
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: configuration
+            trigger: true
+            passed:
+              - upload-and-stage-pks
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: configure-pks
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/configure-product.yml
+        input_mapping:
+          config: interpolated-creds
+          env: interpolated-creds
+          vars: variable
+        params:
+          CONFIG_FILE: environments/((foundation))/config/pks.yml
+          ENV_FILE: environments/((foundation))/env/env.yml
+          VARS_FILES: vars/environments/((foundation))/vars/pks-vars.yml
 
   - name: apply-product-changes
     serial: true
@@ -411,6 +492,7 @@ jobs:
             trigger: true
             passed:
               - configure-pas
+              - configure-pks
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
