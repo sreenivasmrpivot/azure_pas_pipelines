@@ -1,0 +1,16 @@
+[
+	{
+		"protocol": "tcp",
+		"ports": "3306,5432",
+		"destination": "0.0.0.0/0",
+		"code": 0,
+		"type": 0
+	},
+	{
+		"protocol": "udp",
+		"ports": "3306",
+		"destination": "0.0.0.0/0",
+		"code": 0,
+		"type": 0
+	}
+]

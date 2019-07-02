@@ -1,0 +1,15 @@
+enable-delete-isolation-segments: false
+enable-unassign-security-groups: false
+enable-service-access: true
+running-security-groups:
+- default_security_group
+staging-security-groups:
+- default_security_group
+shared-domains:
+  apps.internal:
+    internal: true
+  apps.sandbox.miclip.io:
+    internal: false
+  mesh.apps.sandbox.miclip.io:
+    internal: false
+enable-remove-shared-domains: true
