@@ -23,9 +23,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: create-orgs
 
@@ -38,9 +37,9 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
+      # PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: shared-domains
 
@@ -53,9 +52,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: create-security-groups
 
@@ -69,9 +67,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: assign-default-security-groups
 
@@ -86,9 +83,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: delete-orgs
 
@@ -102,9 +98,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: create-org-private-domains
 
@@ -118,9 +113,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: service-access
 
@@ -134,9 +128,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: share-org-private-domains
 
@@ -150,9 +143,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: create-spaces
 
@@ -168,9 +160,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: delete-spaces
 
@@ -186,9 +177,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: update-spaces
 
@@ -204,9 +194,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LDAP_PASSWORD: ((ldap_password))
       LDAP_SERVER: ((ldap_server))
       LOG_LEVEL: ((log_level))
@@ -222,9 +211,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: update-space-quotas
 
@@ -238,9 +226,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: update-space-security-groups
 
@@ -256,9 +243,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LDAP_PASSWORD: ((ldap_password))
       LDAP_SERVER: ((ldap_server))
       LOG_LEVEL: ((log_level))
@@ -274,9 +260,8 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: update-org-quotas
 
@@ -291,8 +276,8 @@ jobs:
     file: config-repo/ci/tasks/cf-mgmt.yml
     params:
       SYSTEM_DOMAIN: ((system_domain))
-      USER_ID: ((cf-mgmt.username))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      USER_ID: cf-mgmt
+      CLIENT_SECRET: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: isolation-segments
@@ -309,8 +294,7 @@ jobs:
     params:
       SYSTEM_DOMAIN: ((system_domain))
       USER_ID: ((cf-mgmt.username))
-      PASSWORD: ((cf-mgmt.password))
       CONFIG_DIR: ((config_dir))
-      CLIENT_SECRET: ((cf_mgmt_client_secret))
+      CLIENT_SECRET: ((cf-mgmt.password))
       LOG_LEVEL: ((log_level))
       CF_MGMT_COMMAND: cleanup-org-users
