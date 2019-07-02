@@ -236,10 +236,20 @@ product-properties:
   .properties.smoke_tests:
     selected_option: on_demand
     value: on_demand
+  .properties.smtp_address:
+    value: smtp.sendgrid.net
   .properties.smtp_auth_mechanism:
     value: plain
+  .properties.smtp_credentials:
+    value:
+      identity: ((sendgrid.username))
+      password: ((sendgrid.password))
   .properties.smtp_enable_starttls_auto:
-    value: false
+    value: true
+  .properties.smtp_from:
+    value: ((notifications_from))
+  .properties.smtp_port:
+    value: 587
   .properties.syslog_agent_enabled:
     value: false
   .properties.syslog_drop_debug:
@@ -488,7 +498,7 @@ errand-config:
   push-apps-manager:
     post-deploy-state: true
   push-usage-service:
-    post-deploy-state: false
+    post-deploy-state: true
   smbbrokerpush:
     post-deploy-state: false
   smoke_tests:
