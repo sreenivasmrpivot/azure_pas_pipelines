@@ -1,4 +1,5 @@
-orgs: []
+orgs: 
+- miclip
 enable-delete-orgs: true
 protected_orgs:
 - system
