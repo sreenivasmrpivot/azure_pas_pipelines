@@ -357,7 +357,7 @@ resource-config:
       id: automatic
     internet_connected: false
   credhub:
-    instances: 3
+    instances: automatic
     instance_type:
       id: automatic
     internet_connected: false
