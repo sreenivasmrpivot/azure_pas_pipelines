@@ -6,7 +6,6 @@ resource_types:
     tag: beta-backend
 
 resources:
-
 - name: config
   type: git
   source:
@@ -17,7 +16,6 @@ resources:
     paths: 
       - terraforming-azure/**/*
     depth: 1
-
 
 - name: daily
   type: time
@@ -62,4 +60,3 @@ jobs:
       params:
         terraform_source: config/terraforming-azure/terraforming-pas
         env_name: sandbox
-
