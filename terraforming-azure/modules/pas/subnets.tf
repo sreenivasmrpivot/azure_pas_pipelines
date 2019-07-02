@@ -64,20 +64,20 @@ resource "azurerm_subnet_network_security_group_association" "pks_services_subne
 // Security Group for PKS API Nodes
 
 resource "azurerm_application_security_group" "pks-master" {
-  name                = "${var.env_id}-pks-master-app-sec-group"
+  name                = "${var.env_name}-pks-master-app-sec-group"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
 }
 
 resource "azurerm_application_security_group" "pks-api" {
-  name                = "${var.env_id}-pks-api-app-sec-group"
+  name                = "${var.env_name}-pks-api-app-sec-group"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
 }
 
 // Allow access from the internet to the masters
 resource "azurerm_network_security_group" "pks-master" {
-  name                = "${var.env_id}-pks-master-sg"
+  name                = "${var.env_name}-pks-master-sg"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
 
@@ -96,7 +96,7 @@ resource "azurerm_network_security_group" "pks-master" {
 
 // Allow access from the internet to the PKS API VM
 resource "azurerm_network_security_group" "pks-api" {
-  name                = "${var.env_id}-pks-api-sg"
+  name                = "${var.env_name}-pks-api-sg"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
 
@@ -115,7 +115,7 @@ resource "azurerm_network_security_group" "pks-api" {
 
 // Allow access from the internal VMs to the internal VMs via TCP and UDP
 resource "azurerm_network_security_group" "pks-internal" {
-  name                = "${var.env_id}-pks-internal-sg"
+  name                = "${var.env_name}-pks-internal-sg"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
 
