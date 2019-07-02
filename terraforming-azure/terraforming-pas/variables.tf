@@ -145,6 +145,16 @@ variable "pcf_services_subnet" {
   default = "10.0.4.0/22"
 }
 
+variable "pcf_pks_subnet" {
+  type    = "string"
+  default = "10.0.16.0/22"
+}
+
+variable "pcf_pks_services_subnet" {
+  type    = "string"
+  default = "10.0.20.0/22"
+}
+
 /*******************************
  * Deprecated, Delete After Next Release *
  *******************************/

@@ -10,6 +10,21 @@ resource "azurerm_subnet" "pas_subnet" {
   network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
 }
 
+resource "azurerm_subnet_network_security_group_association" "pks_subnet" {
+  subnet_id                 = "${azurerm_subnet.pks_subnet.id}"
+  network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
+}
+
+resource "azurerm_subnet" "pks_subnet" {
+  name = "${var.env_name}-pks-subnet"
+
+  //  depends_on                = ["${var.resource_group_name}"]
+  resource_group_name       = "${var.resource_group_name}"
+  virtual_network_name      = "${var.network_name}"
+  address_prefix            = "${var.pks_subnet_cidr}"
+  network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
+}
+
 resource "azurerm_subnet_network_security_group_association" "pas_subnet" {
   subnet_id                 = "${azurerm_subnet.pas_subnet.id}"
   network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
@@ -27,5 +42,21 @@ resource "azurerm_subnet" "services_subnet" {
 
 resource "azurerm_subnet_network_security_group_association" "services_subnet" {
   subnet_id                 = "${azurerm_subnet.services_subnet.id}"
+  network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
+}
+
+
+resource "azurerm_subnet" "pks_services_subnet" {
+  name = "${var.env_name}-pks-services-subnet"
+
+  //  depends_on                = ["${var.resource_group_name}"]
+  resource_group_name       = "${var.resource_group_name}"
+  virtual_network_name      = "${var.network_name}"
+  address_prefix            = "${var.pks_services_subnet_cidr}"
+  network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
+}
+
+resource "azurerm_subnet_network_security_group_association" "pks_services_subnet" {
+  subnet_id                 = "${azurerm_subnet.pks_services_subnet.id}"
   network_security_group_id = "${var.bosh_deployed_vms_security_group_id}"
 }

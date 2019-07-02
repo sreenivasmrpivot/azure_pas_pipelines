@@ -50,6 +50,8 @@ module "pas" {
 
   pas_subnet_cidr      = "${var.pcf_pas_subnet}"
   services_subnet_cidr = "${var.pcf_services_subnet}"
+  pks_subnet_cidr      = "${var.pcf_pks_subnet}"
+  pks_services_subnet_cidr = "${var.pcf_pks_services_subnet}"
 
   cf_storage_account_name              = "${var.cf_storage_account_name}"
   cf_buildpacks_storage_container_name = "${var.cf_buildpacks_storage_container_name}"
