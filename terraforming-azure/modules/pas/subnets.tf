@@ -127,7 +127,7 @@ resource "azurerm_network_security_group" "pks-internal" {
     protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefixes    = ["${local.pks_cidr}", "${local.pks_services_cidr}"]
+    source_address_prefixes    = ["${var.pks_subnet_cidr}", "${var.pks_services_subnet_cidr}"]
     destination_address_prefix = "*"
   }
 }
