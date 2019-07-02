@@ -5,3 +5,4 @@ time-trigger: 15m
 config_dir: ./environments/sandbox/cf-mgmt
 ldap_password: ""
 ldap_server: ""
+foundation: sandbox

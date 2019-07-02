@@ -6,7 +6,8 @@ resources:
     uri: ((configuration-uri))
     branch: master
     submodules: all
-
+    paths: 
+      - environments/((foundation))/cf-mgmt/*
 
 - name: time-trigger
   type: time
