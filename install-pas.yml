@@ -1,6 +1,5 @@
 
 resources:
-
 - name: platform-automation-tasks
   type: s3
   source:
@@ -122,7 +121,6 @@ resources:
   source:
     interval: 999999h
 
-
 interpolate-creds: &interpolate-creds
   image: platform-automation-image
   file: platform-automation-tasks/tasks/credhub-interpolate.yml
@@ -138,7 +136,6 @@ interpolate-creds: &interpolate-creds
     files: configuration
   output_mapping:
     interpolated-files: interpolated-creds
-
 
 jobs:
   - name: install-opsman
@@ -351,14 +348,14 @@ jobs:
       - aggregate:
           - get: platform-automation-image
             params:
-              unpack: true
-            passed: [ "upgrade-opsman" ]
+              unpack: true            
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: pas-product
           - get: configuration
             trigger: true
+            passed: [ "upgrade-opsman" ]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -378,13 +375,13 @@ jobs:
           - get: platform-automation-image
             params:
               unpack: true
-            passed:
-              - upload-and-stage-pas
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: configuration
             trigger: true
+            passed:
+              - upload-and-stage-pas
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -407,13 +404,13 @@ jobs:
           - get: platform-automation-image
             params:
               unpack: true
-            passed:
-              - configure-pas
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: configuration
             trigger: true
+            passed:
+              - configure-pas
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -424,4 +421,3 @@ jobs:
           env: interpolated-creds
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
-
