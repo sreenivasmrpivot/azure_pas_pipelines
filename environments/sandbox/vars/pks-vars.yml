@@ -1,0 +1,6 @@
+default_security_group: sandbox-bosh-deployed-vms-security-group
+location: westus2
+primary_availability_set: sandbox-pks-backend-pool
+vnet_name: sandbox-virtual-network
+pks_api_hostname: api.pks.sandbox.miclip.io
+pks_lb: sandbox-pks-lb

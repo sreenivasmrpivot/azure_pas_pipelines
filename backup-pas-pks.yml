@@ -54,6 +54,31 @@ jobs:
     params:
       file: pas-backup-artifact/pas-backup.tar
 
+- name: bbr-backup-pks
+  serial: true
+  plan:
+  - aggregate:
+    - get: bbr-pipeline-tasks-repo
+    - get: bbr-release
+  - task: check-opsman-status
+    file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
+    params:
+      <<: *opsman_credentials
+  - task: extract-binary
+    file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
+  - task: bbr-backup-pas
+    file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pks/task.yml
+    params:
+      <<: *opsman_credentials
+    on_failure:
+      task: bbr-cleanup-pas
+      file: bbr-pipeline-tasks-repo/tasks/bbr-cleanup-pks/task.yml
+      params:
+        <<: *opsman_credentials
+  - put: pks-backup-bucket
+    params:
+      file: pks-backup-artifact/pks-backup.tar
+
 - name: bbr-backup-director
   serial: true
   plan:
@@ -102,6 +127,11 @@ resources:
   source:
     <<: *s3_credentials
     versioned_file: backup/pas-backup.tar
+- name: pks-backup-bucket
+  type: s3
+  source:
+    <<: *s3_credentials
+    versioned_file: backup/pks-backup.tar
 - name: director-backup-bucket
   type: s3
   source:

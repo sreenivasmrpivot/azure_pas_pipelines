@@ -106,3 +106,7 @@ vmextensions-configuration:
   cloud_properties:
     security_group: ((web_security_group))
     load_balancer: ((tcp_lb))
+- name: pks-lb-security-group
+  cloud_properties:
+    security_group: ((pks_api_security_group))
+    load_balancer: ((pks_lb))
