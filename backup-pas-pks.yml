@@ -17,6 +17,7 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: daily-trigger
     - get: bbr-pipeline-tasks-repo
   - task: export-om-installation
     file: bbr-pipeline-tasks-repo/tasks/export-om-installation/task.yml
@@ -33,6 +34,8 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: daily-trigger
+      passed: [export-om-installation]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
   - task: check-opsman-status
@@ -58,6 +61,8 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: daily-trigger
+      passed: [bbr-backup-pas]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
   - task: check-opsman-status
@@ -83,6 +88,8 @@ jobs:
   serial: true
   plan:
   - aggregate:
+    - get: daily-trigger
+      passed: [bbr-backup-pks]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
   - task: check-opsman-status
@@ -112,6 +119,10 @@ resource_types:
     tag: latest-final
 
 resources:
+- name: daily-trigger
+  type: time
+  source:
+    interval: 24h
 - name: bbr-pipeline-tasks-repo
   type: git
   source:
