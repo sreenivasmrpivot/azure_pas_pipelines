@@ -6,7 +6,8 @@ org-billingmanager:
   ldap_groups: []
 org-manager:
   ldap_users: []
-  users: []
+  users: 
+    - mlipscombe@outlook.com
   saml_users: []
   ldap_groups: []
 org-auditor:
