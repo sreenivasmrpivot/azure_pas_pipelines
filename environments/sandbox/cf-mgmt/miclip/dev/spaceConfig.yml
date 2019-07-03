@@ -2,12 +2,14 @@ org: miclip
 space: dev
 space-developer:
   ldap_users: []
-  users: []
+  users:
+    - mlipscombe@outlook.com
   saml_users: []
   ldap_groups: []
 space-manager:
   ldap_users: []
-  users: []
+  users:
+    - mlipscombe@outlook.com
   saml_users: []
   ldap_groups: []
 space-auditor:
