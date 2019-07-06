@@ -102,6 +102,24 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     regexp: pas-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
 
+- name: workers-product
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: concourse-workers-.*.pivotal
+
+- name: workers-stemcell
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: workers-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
+
 - name: pks-product
   type: s3
   source:
@@ -349,6 +367,8 @@ jobs:
             trigger: true
           - get: pks-stemcell
             trigger: true
+          - get: workers-stemcell
+            trigger: true
           - get: configuration
           - get: variable
       - task: interpolate-creds
@@ -369,6 +389,94 @@ jobs:
           stemcell: pks-stemcell
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
+      - task: upload-workers-stemcell
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-stemcell.yml
+        input_mapping:
+          env: interpolated-creds
+          stemcell: workers-stemcell
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+  
+  - name: upload-and-stage-workers
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true            
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: workers-product
+          - get: configuration
+            trigger: true
+            passed: [ "upgrade-opsman" ]
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: upload-and-stage-product
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+        input_mapping:
+          product: workers-product
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+
+  - name: configure-workers
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: configuration
+            trigger: true
+            passed:
+              - upload-and-stage-workers
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: configure-workers
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/configure-product.yml
+        input_mapping:
+          config: interpolated-creds
+          env: interpolated-creds
+          vars: variable
+        params:
+          CONFIG_FILE: environments/((foundation))/config/workers.yml
+          ENV_FILE: environments/((foundation))/env/env.yml
+          VARS_FILES: vars/environments/((foundation))/vars/workers-vars.yml
+
+  - name: apply-workers-changes
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: configuration
+            trigger: true
+            passed:
+              - configure-workers
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: apply-product-changes
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/apply-changes.yml
+        input_mapping:
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
 
   - name: upload-and-stage-pas
     serial: true
@@ -383,12 +491,13 @@ jobs:
           - get: pas-product
           - get: configuration
             trigger: true
-            passed: [ "upgrade-opsman" ]
+            passed: [ "apply-workers-changes" ]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
       - task: upload-and-stage-product
         image: platform-automation-image
+        tags: ["sandbox-workers"]
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
         input_mapping:
           product: pas-product
@@ -409,13 +518,14 @@ jobs:
           - get: pks-product
           - get: configuration
             trigger: true
-            passed: [ "upgrade-opsman" ]
+            passed: [ "apply-workers-changes" ]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
       - task: upload-and-stage-product
         image: platform-automation-image
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+        tags: ["sandbox-workers"]
         input_mapping:
           product: pks-product
           env: interpolated-creds
@@ -442,6 +552,7 @@ jobs:
       - task: configure-pas
         image: platform-automation-image
         file: platform-automation-tasks/tasks/configure-product.yml
+        tags: ["sandbox-workers"]
         input_mapping:
           config: interpolated-creds
           env: interpolated-creds
@@ -471,6 +582,7 @@ jobs:
       - task: configure-pks
         image: platform-automation-image
         file: platform-automation-tasks/tasks/configure-product.yml
+        tags: ["sandbox-workers"]
         input_mapping:
           config: interpolated-creds
           env: interpolated-creds
@@ -501,6 +613,7 @@ jobs:
       - task: apply-product-changes
         image: platform-automation-image
         file: platform-automation-tasks/tasks/apply-changes.yml
+        tags: ["sandbox-workers"]
         input_mapping:
           env: interpolated-creds
         params:

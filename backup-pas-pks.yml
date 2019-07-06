@@ -4,7 +4,7 @@ opsman_credentials: &opsman_credentials
   OPSMAN_URL: ((opsman_uri))
   OPSMAN_USERNAME: ((opsman.username))
   OPSMAN_PASSWORD: ((opsman.password))
-  OPSMAN_PRIVATE_KEY: ((opsman_ssh.private_key))
+  #OPSMAN_PRIVATE_KEY: ((opsman_ssh.private_key))
 
 s3_credentials: &s3_credentials
   access_key_id: ((s3_access_key_id))
@@ -21,6 +21,7 @@ jobs:
     - get: bbr-pipeline-tasks-repo
   - task: export-om-installation
     file: bbr-pipeline-tasks-repo/tasks/export-om-installation/task.yml
+    tags: ["sandbox-worker"]
     params:
       SKIP_SSL_VALIDATION: true
       OPSMAN_URL: ((opsman_uri))
@@ -40,12 +41,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
+    tags: ["sandbox_worker"]
   - task: bbr-backup-pas
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pas/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
     on_failure:
@@ -67,12 +71,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
+    tags: ["sandbox_worker"]
   - task: bbr-backup-pas
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pks/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
     on_failure:
@@ -94,12 +101,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
+    tags: ["sandbox_worker"]
   - task: bbr-backup-director
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-director/task.yml
+    tags: ["sandbox_worker"]
     params:
       <<: *opsman_credentials
     on_failure:
