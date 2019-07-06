@@ -3,7 +3,7 @@ product-properties:
   .properties.tsa_endpoint:
     value: ((tsa_hostname))
   .properties.tsa_host_key:
-    value: ((tsa_host.public_key)
+    value: ((tsa_host.public_key))
   .properties.tsa_port:
     value: 2222
   .properties.worker_key:
