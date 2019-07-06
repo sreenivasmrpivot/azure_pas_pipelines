@@ -4,7 +4,6 @@ opsman_credentials: &opsman_credentials
   OPSMAN_URL: ((opsman_uri))
   OPSMAN_USERNAME: ((opsman.username))
   OPSMAN_PASSWORD: ((opsman.password))
-  #OPSMAN_PRIVATE_KEY: ((opsman_ssh.private_key))
 
 s3_credentials: &s3_credentials
   access_key_id: ((s3_access_key_id))
