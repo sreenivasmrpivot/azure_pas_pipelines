@@ -41,15 +41,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
   - task: bbr-backup-pas
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pas/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
     on_failure:
@@ -71,15 +71,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
   - task: bbr-backup-pas
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pks/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
     on_failure:
@@ -101,15 +101,15 @@ jobs:
     - get: bbr-release
   - task: check-opsman-status
     file: bbr-pipeline-tasks-repo/tasks/check-opsman-status/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
   - task: bbr-backup-director
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-director/task.yml
-    tags: ["sandbox_worker"]
+    tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
     on_failure:
