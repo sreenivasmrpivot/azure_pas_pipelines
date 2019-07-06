@@ -1,2 +1,2 @@
 worker_tag: sandbox-worker
-tsa_host: tsa.pcf.miclip.io
+tsa_hostname: tsa.pcf.miclip.io

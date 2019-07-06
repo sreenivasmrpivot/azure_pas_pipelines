@@ -1,7 +1,7 @@
 product-name: concourse-workers
 product-properties:
   .properties.tsa_endpoint:
-    value: ((tsa_host))
+    value: ((tsa_hostname))
   .properties.tsa_host_key:
     value: ((tsa_host.public_key)
   .properties.tsa_port:
