@@ -278,6 +278,81 @@ jobs:
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
 
+  - name: upload-worker-stemcell
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+            passed:
+              - install-opsman
+          - get: one-time-trigger
+            trigger: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: workers-stemcell
+            trigger: true
+          - get: configuration
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: upload-workers-stemcell
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-stemcell.yml
+        input_mapping:
+          env: interpolated-creds
+          stemcell: workers-stemcell
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+
+  - name: deploy-concourse-workers
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: configuration
+            trigger: true
+            passed: [upload-worker-stemcell, install-opsman]
+          - get: variable
+          - get: workers-product
+          - get: one-time-trigger
+            trigger: true
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: upload-and-stage-product
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+        input_mapping:
+          product: workers-product
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+      - task: configure-workers
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/configure-product.yml
+        input_mapping:
+          config: interpolated-creds
+          env: interpolated-creds
+          vars: variable
+        params:
+          CONFIG_FILE: environments/((foundation))/config/workers.yml
+          ENV_FILE: environments/((foundation))/env/env.yml
+          VARS_FILES: vars/environments/((foundation))/vars/workers-vars.yml
+      - task: apply-product-changes
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/apply-changes.yml
+        input_mapping:
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+
   - name: export-installation
     serial: true
     plan:
@@ -291,6 +366,7 @@ jobs:
             params:
               unpack: true
           - get: configuration
+            passed: [deploy-concourse-workers]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
@@ -312,7 +388,7 @@ jobs:
     plan:
       - aggregate:
           - get: one-time-trigger
-            passed: [ install-opsman ]
+            passed: [ deploy-concourse-workers ]
           - get: platform-automation-image
             params:
               unpack: true
@@ -359,15 +435,13 @@ jobs:
             params:
               unpack: true
             passed:
-              - upgrade-opsman
+              - deploy-concourse-workers
           - get: platform-automation-tasks
             params:
               unpack: true
           - get: pas-stemcell
             trigger: true
           - get: pks-stemcell
-            trigger: true
-          - get: workers-stemcell
             trigger: true
           - get: configuration
           - get: variable
@@ -376,6 +450,7 @@ jobs:
       - task: upload-pas-stemcell
         image: platform-automation-image
         file: platform-automation-tasks/tasks/upload-stemcell.yml
+        tags: [((concourse-worker-tag))]
         input_mapping:
           env: interpolated-creds
           stemcell: pas-stemcell
@@ -384,99 +459,12 @@ jobs:
       - task: upload-pks-stemcell
         image: platform-automation-image
         file: platform-automation-tasks/tasks/upload-stemcell.yml
+        tags: [((concourse-worker-tag))]
         input_mapping:
           env: interpolated-creds
           stemcell: pks-stemcell
         params:
-          ENV_FILE: environments/((foundation))/env/env.yml
-      - task: upload-workers-stemcell
-        image: platform-automation-image
-        file: platform-automation-tasks/tasks/upload-stemcell.yml
-        input_mapping:
-          env: interpolated-creds
-          stemcell: workers-stemcell
-        params:
-          ENV_FILE: environments/((foundation))/env/env.yml
-  
-  - name: upload-and-stage-workers
-    serial: true
-    plan:
-      - aggregate:
-          - get: platform-automation-image
-            params:
-              unpack: true            
-          - get: platform-automation-tasks
-            params:
-              unpack: true
-          - get: workers-product
-          - get: configuration
-            trigger: true
-            passed: [ "upgrade-opsman" ]
-          - get: variable
-      - task: interpolate-creds
-        <<: *interpolate-creds
-      - task: upload-and-stage-product
-        image: platform-automation-image
-        file: platform-automation-tasks/tasks/upload-and-stage-product.yml
-        input_mapping:
-          product: workers-product
-          env: interpolated-creds
-        params:
-          ENV_FILE: environments/((foundation))/env/env.yml
-
-  - name: configure-workers
-    serial: true
-    plan:
-      - aggregate:
-          - get: platform-automation-image
-            params:
-              unpack: true
-          - get: platform-automation-tasks
-            params:
-              unpack: true
-          - get: configuration
-            trigger: true
-            passed:
-              - upload-and-stage-workers
-          - get: variable
-      - task: interpolate-creds
-        <<: *interpolate-creds
-      - task: configure-workers
-        image: platform-automation-image
-        file: platform-automation-tasks/tasks/configure-product.yml
-        input_mapping:
-          config: interpolated-creds
-          env: interpolated-creds
-          vars: variable
-        params:
-          CONFIG_FILE: environments/((foundation))/config/workers.yml
-          ENV_FILE: environments/((foundation))/env/env.yml
-          VARS_FILES: vars/environments/((foundation))/vars/workers-vars.yml
-
-  - name: apply-workers-changes
-    serial: true
-    plan:
-      - aggregate:
-          - get: platform-automation-image
-            params:
-              unpack: true
-          - get: platform-automation-tasks
-            params:
-              unpack: true
-          - get: configuration
-            trigger: true
-            passed:
-              - configure-workers
-          - get: variable
-      - task: interpolate-creds
-        <<: *interpolate-creds
-      - task: apply-product-changes
-        image: platform-automation-image
-        file: platform-automation-tasks/tasks/apply-changes.yml
-        input_mapping:
-          env: interpolated-creds
-        params:
-          ENV_FILE: environments/((foundation))/env/env.yml
+          ENV_FILE: environments/((foundation))/env/env.yml  
 
   - name: upload-and-stage-pas
     serial: true
@@ -491,13 +479,13 @@ jobs:
           - get: pas-product
           - get: configuration
             trigger: true
-            passed: [ "apply-workers-changes" ]
+            passed: [ "upgrade-opsman" ]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
       - task: upload-and-stage-product
         image: platform-automation-image
-        tags: ["sandbox-workers"]
+        tags: [((concourse-worker-tag))]
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
         input_mapping:
           product: pas-product
@@ -518,14 +506,14 @@ jobs:
           - get: pks-product
           - get: configuration
             trigger: true
-            passed: [ "apply-workers-changes" ]
+            passed: [ "upgrade-opsman" ]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
       - task: upload-and-stage-product
         image: platform-automation-image
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
-        tags: ["sandbox-workers"]
+        tags: [((concourse-worker-tag))]
         input_mapping:
           product: pks-product
           env: interpolated-creds
@@ -552,7 +540,7 @@ jobs:
       - task: configure-pas
         image: platform-automation-image
         file: platform-automation-tasks/tasks/configure-product.yml
-        tags: ["sandbox-workers"]
+        tags: [((concourse-worker-tag))]
         input_mapping:
           config: interpolated-creds
           env: interpolated-creds
@@ -582,7 +570,7 @@ jobs:
       - task: configure-pks
         image: platform-automation-image
         file: platform-automation-tasks/tasks/configure-product.yml
-        tags: ["sandbox-workers"]
+        tags: [((concourse-worker-tag))]
         input_mapping:
           config: interpolated-creds
           env: interpolated-creds
@@ -613,7 +601,7 @@ jobs:
       - task: apply-product-changes
         image: platform-automation-image
         file: platform-automation-tasks/tasks/apply-changes.yml
-        tags: ["sandbox-workers"]
+        tags: [((concourse-worker-tag))]
         input_mapping:
           env: interpolated-creds
         params:
