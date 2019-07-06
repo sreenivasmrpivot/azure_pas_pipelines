@@ -19,7 +19,7 @@ network-properties:
     name: zone-1
 resource-config:
   worker:
-    instances: 2
+    instances: 3
     instance_type:
       id: automatic
     internet_connected: false
