@@ -54,6 +54,7 @@ jobs:
     on_failure:
       task: bbr-cleanup-pas
       file: bbr-pipeline-tasks-repo/tasks/bbr-cleanup-pas/task.yml
+      tags: ["sandbox-worker"]
       params:
         <<: *opsman_credentials
   - put: pas-backup-bucket
@@ -84,6 +85,7 @@ jobs:
     on_failure:
       task: bbr-cleanup-pas
       file: bbr-pipeline-tasks-repo/tasks/bbr-cleanup-pks/task.yml
+      tags: ["sandbox-worker"]
       params:
         <<: *opsman_credentials
   - put: pks-backup-bucket
