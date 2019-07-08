@@ -77,13 +77,13 @@ jobs:
   - task: extract-binary
     file: bbr-pipeline-tasks-repo/tasks/extract-bbr-binary/task.yml
     tags: ["sandbox-worker"]
-  - task: bbr-backup-pas
+  - task: bbr-backup-pks
     file: bbr-pipeline-tasks-repo/tasks/bbr-backup-pks/task.yml
     tags: ["sandbox-worker"]
     params:
       <<: *opsman_credentials
     on_failure:
-      task: bbr-cleanup-pas
+      task: bbr-cleanup-pks
       file: bbr-pipeline-tasks-repo/tasks/bbr-cleanup-pks/task.yml
       tags: ["sandbox-worker"]
       params:
