@@ -197,7 +197,7 @@ resource "azurerm_lb_probe" "mesh-healthcheck-probe" {
   loadbalancer_id     = "${azurerm_lb.mesh.id}"
   protocol            = "HTTP"
   port                = 8002
-  path                = "/healthcheck"
+  request_path                = "/healthcheck"
 }
 
 resource "azurerm_lb_rule" "mesh-https-rule" {
