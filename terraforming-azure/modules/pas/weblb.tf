@@ -191,6 +191,15 @@ resource "azurerm_lb_probe" "mesh-https-probe" {
   port                = 443
 }
 
+resource "azurerm_lb_probe" "mesh-healthcheck-probe" {
+  name                = "mesh-healthcheck-probe"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
+  protocol            = "HTTP"
+  port                = 8002
+  path                = "/healthcheck"
+}
+
 resource "azurerm_lb_rule" "mesh-https-rule" {
   name                = "mesh-https-rule"
   resource_group_name = "${var.resource_group_name}"
