@@ -153,3 +153,65 @@ resource "azurerm_lb_rule" "pks-lb-api-rule" {
   probe_id                       = "${azurerm_lb_probe.pks-lb-api-health-probe.id}"
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.pks-lb-backend-pool.id}"
 }
+
+# MESH 
+
+resource "azurerm_public_ip" "mesh-lb-public-ip" {
+  name                    = "mesh-lb-public-ip"
+  location                = "${var.location}"
+  resource_group_name     = "${var.resource_group_name}"
+  allocation_method       = "Static"
+  sku                     = "Standard"
+  idle_timeout_in_minutes = 30
+}
+
+resource "azurerm_lb" "mesh" {
+  name                = "${var.env_name}-mesh-lb"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group_name}"
+  sku                 = "Standard"
+
+  frontend_ip_configuration = {
+    name                 = "frontendip"
+    public_ip_address_id = "${azurerm_public_ip.mesh-lb-public-ip.id}"
+  }
+}
+
+resource "azurerm_lb_backend_address_pool" "mesh-backend-pool" {
+  name                = "mesh-backend-pool"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
+}
+
+resource "azurerm_lb_probe" "mesh-https-probe" {
+  name                = "mesh-https-probe"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
+  protocol            = "TCP"
+  port                = 443
+}
+
+resource "azurerm_lb_rule" "mesh-https-rule" {
+  name                = "mesh-https-rule"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
+
+  frontend_ip_configuration_name = "frontendip"
+  protocol                       = "TCP"
+  frontend_port                  = 443
+  backend_port                   = 443
+  idle_timeout_in_minutes        = 30
+
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.mesh-backend-pool.id}"
+  probe_id                = "${azurerm_lb_probe.mesh-https-probe.id}"
+}
+
+resource "azurerm_lb_probe" "mesh-http-probe" {
+  name                = "mesh-http-probe"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
+  protocol            = "TCP"
+  port                = 80
+}
+
+
