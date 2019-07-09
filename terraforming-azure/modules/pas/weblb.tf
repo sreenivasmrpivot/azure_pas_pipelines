@@ -183,13 +183,6 @@ resource "azurerm_lb_backend_address_pool" "mesh-backend-pool" {
   loadbalancer_id     = "${azurerm_lb.mesh.id}"
 }
 
-resource "azurerm_lb_probe" "mesh-https-probe" {
-  name                = "mesh-https-probe"
-  resource_group_name = "${var.resource_group_name}"
-  loadbalancer_id     = "${azurerm_lb.mesh.id}"
-  protocol            = "TCP"
-  port                = 443
-}
 
 resource "azurerm_lb_probe" "mesh-healthcheck-probe" {
   name                = "mesh-healthcheck-probe"
@@ -212,15 +205,23 @@ resource "azurerm_lb_rule" "mesh-https-rule" {
   idle_timeout_in_minutes        = 30
 
   backend_address_pool_id = "${azurerm_lb_backend_address_pool.mesh-backend-pool.id}"
-  probe_id                = "${azurerm_lb_probe.mesh-https-probe.id}"
+  probe_id                = "${azurerm_lb_probe.mesh-healthcheck-probe.id}"
 }
 
-resource "azurerm_lb_probe" "mesh-http-probe" {
-  name                = "mesh-http-probe"
+resource "azurerm_lb_rule" "mesh-http-rule" {
+  name                = "mesh-http-rule"
   resource_group_name = "${var.resource_group_name}"
   loadbalancer_id     = "${azurerm_lb.mesh.id}"
-  protocol            = "TCP"
-  port                = 80
+
+  frontend_ip_configuration_name = "frontendip"
+  protocol                       = "TCP"
+  frontend_port                  = 80
+  backend_port                   = 80
+  idle_timeout_in_minutes        = 30
+
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.mesh-backend-pool.id}"
+  probe_id                = "${azurerm_lb_probe.mesh-healthcheck-probe.id}"
 }
+
 
 
