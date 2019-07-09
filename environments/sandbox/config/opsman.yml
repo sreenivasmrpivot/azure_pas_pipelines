@@ -19,3 +19,4 @@ opsman-configuration:
     use_unmanaged_disk: false
     public_ip: ((opsman_public_ip))
     private_ip: ((opsman_private_ip))
+    
