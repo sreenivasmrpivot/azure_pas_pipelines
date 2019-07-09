@@ -190,7 +190,7 @@ resource "azurerm_lb_probe" "mesh-healthcheck-probe" {
   loadbalancer_id     = "${azurerm_lb.mesh.id}"
   protocol            = "HTTP"
   port                = 8002
-  request_path                = "/healthcheck"
+  request_path        = "/healthcheck"
 }
 
 resource "azurerm_lb_rule" "mesh-https-rule" {
@@ -223,5 +223,18 @@ resource "azurerm_lb_rule" "mesh-http-rule" {
   probe_id                = "${azurerm_lb_probe.mesh-healthcheck-probe.id}"
 }
 
+resource "azurerm_lb_rule" "mesh-http-8002-rule" {
+  name                = "mesh-http-8002-rule"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.mesh.id}"
 
+  frontend_ip_configuration_name = "frontendip"
+  protocol                       = "TCP"
+  frontend_port                  = 8002
+  backend_port                   = 8002
+  idle_timeout_in_minutes        = 30
+
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.mesh-backend-pool.id}"
+  probe_id                = "${azurerm_lb_probe.mesh-healthcheck-probe.id}"
+}
 
