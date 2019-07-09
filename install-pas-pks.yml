@@ -284,9 +284,7 @@ jobs:
       - aggregate:
           - get: platform-automation-image
             params:
-              unpack: true
-            passed:
-              - install-opsman
+              unpack: true            
           - get: one-time-trigger
             trigger: true
           - get: platform-automation-tasks
@@ -294,6 +292,7 @@ jobs:
               unpack: true
           - get: workers-stemcell
             trigger: true
+            passed: [install-opsman]
           - get: configuration
           - get: variable
       - task: interpolate-creds
@@ -319,7 +318,7 @@ jobs:
               unpack: true
           - get: configuration
             trigger: true
-            passed: [upload-worker-stemcell, install-opsman]
+            passed: [install-opsman]
           - get: variable
           - get: workers-product
           - get: one-time-trigger
@@ -388,7 +387,6 @@ jobs:
     plan:
       - aggregate:
           - get: one-time-trigger
-            passed: [ deploy-concourse-workers ]
           - get: platform-automation-image
             params:
               unpack: true
@@ -399,6 +397,7 @@ jobs:
           - get: installation
             passed: [ export-installation ]
           - get: configuration
+            passed: [deploy-concourse-workers]
             trigger: true
           - get: variable
           - get: state
