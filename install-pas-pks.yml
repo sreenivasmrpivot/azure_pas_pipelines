@@ -292,8 +292,9 @@ jobs:
               unpack: true
           - get: workers-stemcell
             trigger: true
-            passed: [install-opsman]
           - get: configuration
+            trigger: true
+            passed: [install-opsman]
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds
