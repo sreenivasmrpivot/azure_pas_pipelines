@@ -346,11 +346,13 @@ jobs:
           VARS_FILES: vars/environments/((foundation))/vars/workers-vars.yml
       - task: apply-product-changes
         image: platform-automation-image
-        file: platform-automation-tasks/tasks/apply-changes.yml
+        file: configuration/ci/tasks/apply-product-changes.yml
         input_mapping:
           env: interpolated-creds
+          config: interpolated-creds
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
+          CONFIG_FILE: environments/((foundation))/config/workers.yml
 
   - name: export-installation
     serial: true
