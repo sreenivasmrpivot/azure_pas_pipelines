@@ -93,6 +93,24 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     regexp: \[elastic-runtime,(.*)\]cf-.*.pivotal
 
+- name: iso-product
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: \[p-isolation-segment,(.*)\]p-isolation-segment-.*.pivotal
+
+- name: iso-stemcell
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: iso-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
+
 - name: pas-stemcell
   type: s3
   source:
@@ -445,6 +463,8 @@ jobs:
             trigger: true
           - get: pks-stemcell
             trigger: true
+          - get: iso-stemcell
+            trigger: true
           - get: configuration
           - get: variable
       - task: interpolate-creds
@@ -465,6 +485,15 @@ jobs:
         input_mapping:
           env: interpolated-creds
           stemcell: pks-stemcell
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml  
+      - task: upload-iso-stemcell
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/upload-stemcell.yml
+        tags: [((concourse-worker-tag))]
+        input_mapping:
+          env: interpolated-creds
+          stemcell: iso-stemcell
         params:
           ENV_FILE: environments/((foundation))/env/env.yml  
 
@@ -491,6 +520,33 @@ jobs:
         file: platform-automation-tasks/tasks/upload-and-stage-product.yml
         input_mapping:
           product: pas-product
+          env: interpolated-creds
+        params:
+          ENV_FILE: environments/((foundation))/env/env.yml
+
+  - name: upload-and-stage-iso
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true            
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: iso-product
+          - get: configuration
+            trigger: true
+            passed: [ "upload-and-stage-pas" ]
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: upload-and-stage-product
+        image: platform-automation-image
+        tags: [((concourse-worker-tag))]
+        file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+        input_mapping:
+          product: iso-product
           env: interpolated-creds
         params:
           ENV_FILE: environments/((foundation))/env/env.yml
@@ -551,6 +607,36 @@ jobs:
           CONFIG_FILE: environments/((foundation))/config/pas.yml
           ENV_FILE: environments/((foundation))/env/env.yml
           VARS_FILES: vars/environments/((foundation))/vars/pas-vars.yml
+
+  - name: configure-iso
+    serial: true
+    plan:
+      - aggregate:
+          - get: platform-automation-image
+            params:
+              unpack: true
+          - get: platform-automation-tasks
+            params:
+              unpack: true
+          - get: configuration
+            trigger: true
+            passed:
+              - upload-and-stage-iso
+          - get: variable
+      - task: interpolate-creds
+        <<: *interpolate-creds
+      - task: configure-pas
+        image: platform-automation-image
+        file: platform-automation-tasks/tasks/configure-product.yml
+        tags: [((concourse-worker-tag))]
+        input_mapping:
+          config: interpolated-creds
+          env: interpolated-creds
+          vars: variable
+        params:
+          CONFIG_FILE: environments/((foundation))/config/iso.yml
+          ENV_FILE: environments/((foundation))/env/env.yml
+          VARS_FILES: vars/environments/((foundation))/vars/iso-vars.yml
   
   - name: configure-pks
     serial: true
@@ -597,6 +683,7 @@ jobs:
             passed:
               - configure-pas
               - configure-pks
+              - configure-iso
           - get: variable
       - task: interpolate-creds
         <<: *interpolate-creds

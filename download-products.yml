@@ -121,7 +121,7 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     region_name: ((s3_region_name))
     secret_access_key: ((s3_secret_access_key))
-    regexp: \[isolation-segment,(.*)\]p-isolation-segment-.*.pivotal
+    regexp: \[p-isolation-segment,(.*)\]p-isolation-segment-.*.pivotal
 
 - name: iso-stemcell
   type: s3
