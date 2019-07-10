@@ -114,6 +114,24 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     regexp: pks-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
 
+- name: iso-product
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: \[isolation-segment,(.*)\]p-isolation-segment-.*.pivotal
+
+- name: iso-stemcell
+  type: s3
+  source:
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: iso-stemcell/\[stemcells-ubuntu-xenial,(.*)\]bosh-stemcell-.*-azure.*\.tgz
+
 - name: config
   type: git
   source:
@@ -251,6 +269,34 @@ jobs:
     - put: pas-stemcell
       params:
         file: pas-stemcell/*.tgz
+
+- name: fetch-iso
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: download-pas-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product-configs/iso.yml
+    output_mapping: {downloaded-stemcell: iso-stemcell}
+  - aggregate:
+    - put: iso-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: iso-stemcell
+      params:
+        file: iso-stemcell/*.tgz
 
 - name: fetch-pas-windows
   plan:
