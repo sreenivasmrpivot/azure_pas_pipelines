@@ -88,6 +88,12 @@ product-properties:
     value: 60
   .properties.cloud_controller_temporary_disable_deployments:
     value: false
+  .properties.cloud_controller_encryption_keys:
+    value:
+    - encryption_key:
+        secret: ((cloud_controller_encrypt_key))
+      label: primary
+      primary: true
   .properties.container_networking:
     selected_option: enable
     value: enable
@@ -507,6 +513,8 @@ errand-config:
     post-deploy-state: true
   push-usage-service:
     post-deploy-state: true
+  rotate_cc_database_key:
+    post-deploy-state: false
   smbbrokerpush:
     post-deploy-state: false
   smoke_tests:
