@@ -140,6 +140,12 @@ variable "pcf_pas_subnet" {
   default = "10.0.0.0/22"
 }
 
+variable "pcf_iso_subnet" {
+  type    = "string"
+  default = "10.0.24.0/22"
+}
+
+
 variable "pcf_services_subnet" {
   type    = "string"
   default = "10.0.4.0/22"
