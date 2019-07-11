@@ -7,6 +7,7 @@ web_lb: sandbox-web-lb
 ssh_lb: sandbox-diego-ssh-lb
 tcp_lb: sandbox-tcp-lb
 pks_lb: sandbox-pks-lb
+iso_lb: sandbox-iso-lb
 
 dns_servers: 168.63.129.16
 

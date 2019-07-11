@@ -119,6 +119,6 @@ resource-config:
       id: automatic
     internet_connected: false
     elb_names:
-    - sandbox-web-lb
+    - sandbox-iso-lb
     additional_vm_extensions:
-    - web-lb-security-group
+    - iso-lb-security-group

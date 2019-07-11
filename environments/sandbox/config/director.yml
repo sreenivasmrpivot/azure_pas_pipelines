@@ -110,3 +110,7 @@ vmextensions-configuration:
   cloud_properties:
     security_group: ((pks_api_security_group))
     load_balancer: ((pks_lb))
+- name: iso-lb-security-group
+  cloud_properties:
+    security_group: ((iso_security_group))
+    load_balancer: ((iso_lb))
