@@ -238,3 +238,77 @@ resource "azurerm_lb_rule" "mesh-http-8002-rule" {
   probe_id                = "${azurerm_lb_probe.mesh-healthcheck-probe.id}"
 }
 
+# isolation segment
+
+resource "azurerm_public_ip" "iso-lb-public-ip" {
+  name                    = "iso-lb-public-ip"
+  location                = "${var.location}"
+  resource_group_name     = "${var.resource_group_name}"
+  allocation_method       = "Static"
+  sku                     = "Standard"
+  idle_timeout_in_minutes = 30
+}
+
+resource "azurerm_lb" "iso" {
+  name                = "${var.env_name}-iso-lb"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group_name}"
+  sku                 = "Standard"
+
+  frontend_ip_configuration = {
+    name                 = "frontendip"
+    public_ip_address_id = "${azurerm_public_ip.iso-lb-public-ip.id}"
+  }
+}
+
+resource "azurerm_lb_backend_address_pool" "iso-backend-pool" {
+  name                = "iso-backend-pool"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.iso.id}"
+}
+
+resource "azurerm_lb_probe" "iso-https-probe" {
+  name                = "iso-https-probe"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.iso.id}"
+  protocol            = "TCP"
+  port                = 443
+}
+
+resource "azurerm_lb_rule" "iso-https-rule" {
+  name                = "iso-https-rule"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.iso.id}"
+
+  frontend_ip_configuration_name = "frontendip"
+  protocol                       = "TCP"
+  frontend_port                  = 443
+  backend_port                   = 443
+  idle_timeout_in_minutes        = 30
+
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.iso-backend-pool.id}"
+  probe_id                = "${azurerm_lb_probe.iso-https-probe.id}"
+}
+
+resource "azurerm_lb_probe" "iso-http-probe" {
+  name                = "iso-http-probe"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.iso.id}"
+  protocol            = "TCP"
+  port                = 80
+}
+
+resource "azurerm_lb_rule" "iso-http-rule" {
+  name                = "iso-http-rule"
+  resource_group_name = "${var.resource_group_name}"
+  loadbalancer_id     = "${azurerm_lb.iso.id}"
+
+  frontend_ip_configuration_name = "frontendip"
+  protocol                       = "TCP"
+  frontend_port                  = 80
+  backend_port                   = 80
+  idle_timeout_in_minutes        = 30
+
+  backend_address_pool_id = "${azurerm_lb_backend_address_pool.iso-backend-pool.id}"
+  probe_id                = "${azurerm_lb_probe.iso-http-probe.id}"
+}
