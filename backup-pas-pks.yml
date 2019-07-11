@@ -17,6 +17,7 @@ jobs:
   plan:
   - aggregate:
     - get: daily-trigger
+      trigger: true
     - get: bbr-pipeline-tasks-repo
   - task: export-om-installation
     file: bbr-pipeline-tasks-repo/tasks/export-om-installation/task.yml
@@ -35,6 +36,7 @@ jobs:
   plan:
   - aggregate:
     - get: daily-trigger
+      trigger: true
       passed: [export-om-installation]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
@@ -66,6 +68,7 @@ jobs:
   plan:
   - aggregate:
     - get: daily-trigger
+      trigger: true
       passed: [bbr-backup-pas]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
@@ -97,6 +100,7 @@ jobs:
   plan:
   - aggregate:
     - get: daily-trigger
+      trigger: true
       passed: [bbr-backup-pks]
     - get: bbr-pipeline-tasks-repo
     - get: bbr-release
