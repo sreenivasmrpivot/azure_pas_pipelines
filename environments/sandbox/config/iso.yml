@@ -95,7 +95,7 @@ product-properties:
     value: true
 network-properties:
   network:
-    name: pas
+    name: iso
   other_availability_zones:
   - name: zone-1
   - name: zone-2

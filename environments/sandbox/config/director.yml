@@ -71,6 +71,17 @@ networks-configuration:
       - "zone-1"
       - "zone-2"
       - "zone-3"
+  - name: iso
+    subnets:
+    - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((iso_subnet_name))
+      cidr: ((iso_internal_cidr))
+      reserved_ip_ranges: ((iso_reserved_ip_ranges))
+      gateway: ((iso_internal_gw))
+      dns: ((dns_servers))
+      availability_zone_names:
+      - "zone-1"
+      - "zone-2"
+      - "zone-3"
   - name: pks
     subnets:
     - iaas_identifier: ((resource_group_name))/((virtual_network_name))/((pks_subnet_name))
