@@ -46,6 +46,8 @@ resources:
     uri: ((configuration-uri))
     branch: master
     submodules: all
+    paths: 
+      - environments/((foundation))/vars/*
     depth: 1
 
 - name: installation
