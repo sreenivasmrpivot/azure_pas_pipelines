@@ -1,0 +1,4 @@
+org: isolated
+spaces:
+- dev
+enable-delete-spaces: true
