@@ -1,0 +1,55 @@
+resource_types:
+- name: terraform
+  type: docker-image
+  source:
+    repository: ljfranklin/terraform-resource
+    tag: beta-backend
+
+resources:
+- name: config
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration-uri))
+    branch: master
+    submodules: all
+    paths: 
+      - terraforming-azure/**/*
+    depth: 1
+
+- name: env-state-azure
+  type: terraform
+  source:
+    backend_type: s3
+    env_name: sandbox
+    backend_config:
+      bucket: ((s3_tf_state_bucket))
+      key: tf_state/terraform.tfstate
+      region: ((s3_region_name))
+      access_key: ((s3_access_key_id))
+      secret_key: ((s3_secret_access_key))
+    vars:
+      location: "WestUS2"
+      subscription_id: ((azure_subscription_id))
+      tenant_id: ((azure_tenant_id))
+      client_id: ((azure_client_id))
+      client_secret: ((azure_client_secret))
+      env_name: "sandbox"
+      dns_suffix: "miclip.io"
+      dns_subdomain: "sandbox"
+      ops_manager_vm: false
+      ops_manager_image_uri: ""
+
+jobs:
+- name: destroy-environment
+  serial: true
+  public: false
+  plan:
+  - aggregate:
+    - get: config
+  - do:
+    - put: env-state-azure
+      params:
+        terraform_source: config/terraforming-azure/terraforming-pas
+        env_name: sandbox
+        action: destroy
