@@ -6,6 +6,22 @@ resource "azurerm_dns_a_record" "apps" {
   records             = ["${azurerm_public_ip.web-lb-public-ip.ip_address}"]
 }
 
+resource "azurerm_dns_a_record" "mesh" {
+  name                = "*.mesh.apps"
+  zone_name           = "${var.dns_zone_name}"
+  resource_group_name = "${var.resource_group_name}"
+  ttl                 = "60"
+  records             = ["${azurerm_public_ip.mesh-lb-public-ip.ip_address}"]
+}
+
+resource "azurerm_dns_a_record" "iso" {
+  name                = "api.pks"
+  zone_name           = "${var.dns_zone_name}"
+  resource_group_name = "${var.resource_group_name}"
+  ttl                 = "60"
+  records             = ["${azurerm_public_ip.pks-lb-public-ip.ip_address}"]
+}
+
 resource "azurerm_dns_a_record" "sys" {
   name                = "*.sys"
   zone_name           = "${var.dns_zone_name}"
