@@ -1,5 +1,5 @@
 azure-resource-group: sandbox
 virtual-network-name: sandbox-virtual-network
 subnet-name: sandbox-infrastructure-subnet
-opsman-storage-account: s1sqpfqzqwpx2zhomjxc
+opsman-storage-account: zb9mxj47puo9aj503gou
 opsman_private_ip: 10.0.8.4
